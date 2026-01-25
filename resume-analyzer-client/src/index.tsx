@@ -6,6 +6,7 @@ import PositionCheck from "./Pages/PositionCheck";
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter as Router, Routes, Route } from "react-router";
 import axios from "axios";
+import ResumeExample from "./Pages/ResumeExample";
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -24,6 +25,7 @@ root.render(
       <Routes>
           <Route path="/" element={<App />} />
           <Route path="/position-check" element={<PositionCheck />} />
+          <Route path={"/resume-example"} element={<ResumeExample/>}></Route>
       </Routes>
   </Router>
 );

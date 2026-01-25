@@ -4,6 +4,6 @@ namespace resume_analyzer_api.AI_Resume_Analyzing_Service;
 
 public interface IResumeAnalyzer
 {
-    public Task<Response> Analyze(Request request);
-    public Task<Response> AnalyzeForPosition(Request request);
+    public Task<string?> Analyze(Request request);
+    public Task<Response?> AnalyzeForPosition(Request request);
 }

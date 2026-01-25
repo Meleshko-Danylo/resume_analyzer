@@ -11,7 +11,7 @@ function App() {
     return (
         <div className="App-wrapper">
             <Header/>
-            <div className="App">
+            <div className="App h-[85vh]">
                 <ResumeContainer onAnalysisComplete={setAnalysisResults}/>
                 <AnalyzerResults results={analysisResults}/>
             </div>

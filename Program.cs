@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Mvc;
+using OllamaSharp;
 using resume_analyzer_api.AI_Resume_Analyzing_Service;
 using resume_analyzer_api.Core;
 
@@ -5,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
 builder.Services.AddCors();
+builder.Services.AddChatClient(new OllamaApiClient(new Uri("http://localhost:11434/"), "llama3:8b"));
 builder.Services.AddProblemDetails(opt => opt.CustomizeProblemDetails = context =>
 {
     context.ProblemDetails.Title = "Resume Analyzer API";
@@ -22,7 +25,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseRouting();
-app.MapPost("/resume-analyzer-api/analyze-resume", async (Request body, IResumeAnalyzer analyzer, ILogger<Program> logger) =>
+app.MapPost("/resume-analyzer-api/analyze-resume", async ([FromForm] Request body, IResumeAnalyzer analyzer, ILogger<Program> logger) =>
 {
     try
     {
@@ -36,7 +39,7 @@ app.MapPost("/resume-analyzer-api/analyze-resume", async (Request body, IResumeA
         logger.LogError(e, "An error occured in resume analyzer Analyze method");
         throw;
     }
-});
+}).DisableAntiforgery();
 
 app.MapPost("/resume-analyzer-api/analyze-resume-for-position", async (Request body, IResumeAnalyzer analyzer, ILogger<Program> logger) =>
 {
@@ -52,12 +55,13 @@ app.MapPost("/resume-analyzer-api/analyze-resume-for-position", async (Request b
         logger.LogError(e, "An error occured in resume analyzer Analyze method");
         throw;
     }
-});
+}).DisableAntiforgery();
 
-app.UseCors(policyBuilder => 
+app.UseCors(policyBuilder =>
     policyBuilder
-    .AllowAnyHeader()
-    .AllowAnyMethod()
-    .WithOrigins("localhost:3000"));
+        .AllowAnyHeader()
+        .AllowAnyMethod()
+        .AllowAnyOrigin());
+    // .WithOrigins("localhost:3000"));
 
 app.Run();
