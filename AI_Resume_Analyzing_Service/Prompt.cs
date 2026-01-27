@@ -3,12 +3,6 @@
 public static class Prompt
 {
     public static string Value = """
-                                 Analyze the resume and return ONLY valid JSON.
-                                 DO NOT include markdown.
-                                 DO NOT include explanations.
-                                 DO NOT include code fences.
-                                 DO NOT include text outside JSON.
-                                 
                                  I need you to analyze this resume, look whether it has all the necessary information,
                                  analyze whether the listed skills and certificates align with the provided experience and summary (analyze where the resume contains only relevant information), check if the summary is short enough, and if the information is written in the best way possible. 
                                  ,look at the way points are made in the resume. You should analyze whether the certificates are outdated or not (let's say if a certificate was made 5 years ago from the current day, 

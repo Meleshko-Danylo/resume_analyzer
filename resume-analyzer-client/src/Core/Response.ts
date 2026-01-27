@@ -1,6 +1,6 @@
 ﻿export type Response = {
-    overall_score: number;
-    short_summary: string;
+    overallScore: number;
+    shortSummary: string;
     suggestions: Suggestion[];
 }
 

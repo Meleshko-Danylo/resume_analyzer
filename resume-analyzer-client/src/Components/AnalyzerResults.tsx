@@ -1,19 +1,21 @@
 ﻿import React from 'react';
-import {Response} from "../Core/Response";
+import {useAnalyzerContext} from "./AnalyzerContextProvider";
 
-interface AnalyzerResultsProps {
-    results: Response | null;
-}
+const AnalyzerResults = () => {
+    const {loading, setLoading, analysisResults} = useAnalyzerContext();
 
-const AnalyzerResults = ({ results }: AnalyzerResultsProps) => {
-    if (!results) {
+    if(loading){
+        return <div>Loading...</div>;
+    }
+    
+    if(!analysisResults){
         return (
             <div className="analyzer-results-container flex flex-col items-center justify-center p-8 text-[#dbd8e3] opacity-50">
                 <p className="text-xl">Upload a resume to see the analysis</p>
             </div>
         );
     }
-
+    
     return (
         <div className="analyzer-results-container p-6 text-[#dbd8e3] overflow-y-auto">
             <div className="flex items-center justify-between mb-8 bg-[#352f44] p-6 rounded-2xl shadow-lg border border-[#5c5470]">
@@ -41,11 +43,11 @@ const AnalyzerResults = ({ results }: AnalyzerResultsProps) => {
                                 strokeWidth="8"
                                 fill="transparent"
                                 strokeDasharray={226}
-                                strokeDashoffset={226 - (226 * results.overall_score) / 100}
+                                strokeDashoffset={226 - (226 * analysisResults.overallScore) / 100}
                                 className="text-purple-500 transition-all duration-1000 ease-out"
                             />
                         </svg>
-                        <span className="absolute text-xl font-bold">{results.overall_score}</span>
+                        <span className="absolute text-xl font-bold">{analysisResults.overallScore}</span>
                     </div>
                     <span className="text-xs mt-2 font-medium uppercase tracking-wider">Overall Score</span>
                 </div>
@@ -55,14 +57,14 @@ const AnalyzerResults = ({ results }: AnalyzerResultsProps) => {
                 <h3 className="text-lg font-semibold mb-3 flex items-center">
                     <span className="mr-2">📝</span> Summary
                 </h3>
-                <p className="leading-relaxed opacity-90">{results.short_summary}</p>
+                <p className="leading-relaxed opacity-90">{analysisResults.shortSummary}</p>
             </div>
 
             <div className="space-y-6">
                 <h3 className="text-lg font-semibold flex items-center px-2">
                     <span className="mr-2">💡</span> Key Suggestions
                 </h3>
-                {results.suggestions.map((suggestion, index) => (
+                {analysisResults.suggestions.map((suggestion, index) => (
                     <div key={index} className="bg-[#352f44] rounded-2xl overflow-hidden border border-[#5c5470] shadow-md">
                         <div className="p-4 border-b border-[#5c5470] flex justify-between items-center bg-[#2a2438]/50">
                             <span className="font-bold text-purple-300">{suggestion.category}</span>

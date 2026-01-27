@@ -7,24 +7,24 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter as Router, Routes, Route } from "react-router";
 import axios from "axios";
 import ResumeExample from "./Pages/ResumeExample";
+import AnalyzerContextProvider from "./Components/AnalyzerContextProvider";
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 
 export const axiosInstance = axios.create({
-    baseURL: process.env.REACT_APP_BASE_URL,
+    baseURL: process.env.REACT_APP_API_URL,
     // headers: {
-    //     'Content-Type': 'application/json',
-    //     Accept: 'application/json'
+    //     Accept: 'application/json',
     // }
-}) 
+})
 
 root.render(
   <Router>
       <Routes>
-          <Route path="/" element={<App />} />
-          <Route path="/position-check" element={<PositionCheck />} />
+          <Route path="/" element={<AnalyzerContextProvider><App /></AnalyzerContextProvider>} />
+          <Route path="/position-check" element={<AnalyzerContextProvider><PositionCheck /></AnalyzerContextProvider>} />
           <Route path={"/resume-example"} element={<ResumeExample/>}></Route>
       </Routes>
   </Router>

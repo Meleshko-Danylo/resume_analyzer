@@ -3,7 +3,12 @@ import {axiosInstance} from "../index";
 
 export const analyze_resume_for_position = async (request:Request) => {
     try {
-        const result = await axiosInstance.post("resume-analyzer-api/analyze-resume-for-position", request);
+        const data = new FormData();
+        data.append("resume", request.resume);
+        data.append("positionDescription", request.position_description ?? "")
+        
+        const result = await axiosInstance.post("resume-analyzer-api/analyze-resume-for-position", data);
+        return result.data;
     }
     catch (error) {
         console.log(error);
