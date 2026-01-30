@@ -6,8 +6,12 @@ const AnalyzerContext = createContext<AnalyzerContextProps|undefined>(undefined)
 type AnalyzerContextProps = {
     analysisResults: Response | null;
     setAnalysisResults: React.Dispatch<React.SetStateAction<Response | null>>;
+    timer: number;
+    setTimer: React.Dispatch<React.SetStateAction<number>>;
     loading: boolean;
     setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+    lastStartedAt: number;
+    setLastStartedAt: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export const useAnalyzerContext = () => {
@@ -20,9 +24,11 @@ export const useAnalyzerContext = () => {
 const AnalyzerContextProvider = ({children}: {children: React.ReactNode}) => {
     const [analysisResults, setAnalysisResults] = useState<Response | null>(null);
     const [loading, setLoading] = useState(false);
+    const [timer, setTimer] = useState(0);
+    const [lastStartedAt, setLastStartedAt] = useState(0);
     
     return (
-        <AnalyzerContext.Provider value={{analysisResults, setAnalysisResults, loading, setLoading}}>
+        <AnalyzerContext.Provider value={{analysisResults, setAnalysisResults, loading, setLoading, timer, setTimer, lastStartedAt, setLastStartedAt}}>
             {children}
         </AnalyzerContext.Provider>
     );

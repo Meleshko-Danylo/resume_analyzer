@@ -1,16 +1,57 @@
-﻿import React from 'react';
+﻿import React, {useEffect, useState} from 'react';
 import {useAnalyzerContext} from "./AnalyzerContextProvider";
 
 const AnalyzerResults = () => {
-    const {loading, setLoading, analysisResults} = useAnalyzerContext();
-
+    const {loading, analysisResults, timer, setTimer, lastStartedAt} = useAnalyzerContext();
+    
+    useEffect(() => {
+        let interval: any;
+        setTimer(0);
+        if(loading){
+            const start = Date.now();
+            interval = setInterval(() => {
+                setTimer(Math.floor((Date.now() - start)/1000));
+            }, 1000)
+        }
+        
+        return () => {
+            clearInterval(interval);
+        }
+    }, [loading, lastStartedAt])
+    
+    const formatTime = (seconds: number) => {
+        let minutes = Math.floor(seconds / 60);
+        let hours = Math.floor(minutes / 60);
+        let days = Math.floor(hours / 24);
+        
+        let sec = seconds % 60;
+        let mins = minutes % 60;
+        let hr = hours % 24;
+        
+        const pad = (num: number):string|number => {
+            return num < 10 ? `0${num}` : num;
+        }
+        
+        if(minutes <= 0) return `${pad(sec)}`;
+        else if (hours <= 0) return `${pad(mins)}:${pad(sec)}`;
+        else if (days <= 0) return `${pad(hr)}:${pad(mins)}:${pad(sec)}`;
+        else return `${pad(days)}:${pad(hr)}:${pad(mins)}:${pad(sec)}`;
+    }
+    
     if(loading){
-        return <div>Loading...</div>;
+        return (
+            <div className="analyzer-results-container flex flex-col p-6">
+                <div className="flex-3 pt-1 pr-4 flex justify-end">
+                    <p className="text-[1.2rem] text-[#dbd8e3] opacity-50">{formatTime(timer)}</p>
+                </div>
+                <div className="flex-1 flex items-center justify-center"><img src="/SpinnerSVG.svg" alt="loading" /></div>
+            </div>
+        );
     }
     
     if(!analysisResults){
         return (
-            <div className="analyzer-results-container flex flex-col items-center justify-center p-8 text-[#dbd8e3] opacity-50">
+            <div className="analyzer-results-container flex flex-col items-center justify-center p-6 text-[#dbd8e3] opacity-50">
                 <p className="text-xl">Upload a resume to see the analysis</p>
             </div>
         );

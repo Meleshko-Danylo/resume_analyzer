@@ -5,7 +5,7 @@ import {useAnalyzerContext} from "./AnalyzerContextProvider";
 
 const ResumeContainer = () => {
     const resumeFileInputRef: any = useRef<HTMLInputElement>(null);
-    const {setLoading, setAnalysisResults} = useAnalyzerContext();
+    const {setLoading, setAnalysisResults, setLastStartedAt} = useAnalyzerContext();
     const [inputKey, setInputKey] = useState(0);
 
     const handleClick = ():void => {
@@ -15,8 +15,10 @@ const ResumeContainer = () => {
     }
 
     const handleChange = async (event:React.ChangeEvent<HTMLInputElement>):Promise<void> => {
+        const startTime = Date.now();
         try {
             if(!event.target.files || event.target.files.length === 0) return;
+            setLastStartedAt(startTime);
             setLoading(true);
             
             const request:Request = {
@@ -31,6 +33,7 @@ const ResumeContainer = () => {
         }
         catch (e) {
             console.error(e);
+            setLoading(false);
         }
         finally {
             setLoading(false);
