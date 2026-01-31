@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './Pages/App';
-import PositionCheck from "./Pages/PositionCheck";
+import DetailedCheck from "./Pages/DetailedCheck";
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter as Router, Routes, Route } from "react-router";
 import axios from "axios";
@@ -24,7 +24,7 @@ root.render(
   <Router>
       <Routes>
           <Route path="/" element={<AnalyzerContextProvider><App /></AnalyzerContextProvider>} />
-          <Route path="/position-check" element={<AnalyzerContextProvider><PositionCheck /></AnalyzerContextProvider>} />
+          <Route path="/position-check" element={<AnalyzerContextProvider><DetailedCheck /></AnalyzerContextProvider>} />
           <Route path={"/resume-example"} element={<ResumeExample/>}></Route>
       </Routes>
   </Router>

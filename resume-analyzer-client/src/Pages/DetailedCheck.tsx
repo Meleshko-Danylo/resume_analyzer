@@ -1,20 +1,19 @@
 import React from 'react';
-import '../App.css';
 import Header from "../Components/Header";
 import ResumeContainer, {AnalyzerType} from "../Components/ResumeContainer";
 import AnalyzerResults from "../Components/AnalyzerResults";
 
-function App() {
+const DetailedCheck = () => {
 
     return (
-        <div className="App-wrapper">
+        <div className="App-wrapper ">
             <Header/>
-            <div className="App h-[90vh]">
-                <ResumeContainer analyzer_type={AnalyzerType.Standard}/>
+            <div className="App h-[95vh]">
+                <ResumeContainer analyzer_type={AnalyzerType.Detailed}/>
                 <AnalyzerResults />
             </div>
         </div>
     );
-}
+};
 
-export default App;
+export default DetailedCheck;

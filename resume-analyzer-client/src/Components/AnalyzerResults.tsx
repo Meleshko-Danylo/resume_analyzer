@@ -58,7 +58,7 @@ const AnalyzerResults = () => {
     }
     
     return (
-        <div className="analyzer-results-container p-6 text-[#dbd8e3] overflow-y-auto">
+        <div className="analyzer-results-container p-6 text-[#dbd8e3]">
             <div className="flex items-center justify-between mb-8 bg-[#352f44] p-6 rounded-2xl shadow-lg border border-[#5c5470]">
                 <div>
                     <h2 className="text-2xl font-bold mb-2">Analysis Results</h2>

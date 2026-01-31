@@ -46,11 +46,11 @@ app.MapPost("/resume-analyzer-api/analyze-resume", async ([FromForm] Request bod
     }
 }).DisableAntiforgery();
 
-app.MapPost("/resume-analyzer-api/analyze-resume-for-position", async (Request body, IResumeAnalyzer<Response> analyzer, ILogger<Program> logger) =>
+app.MapPost("/resume-analyzer-api/analyze-resume-for-position", async ([FromForm] Request body, IResumeAnalyzer<Response> analyzer, ILogger<Program> logger, CancellationToken ct) =>
 {
     try
     {
-        var result = await analyzer.AnalyzeForPosition(body);
+        var result = await analyzer.AnalyzeDetailed(body, ct);
         logger.LogInformation("Resume analyzer analysis complete");
         return Results.Ok(result);
     }

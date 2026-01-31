@@ -81,8 +81,65 @@ Considering this report for your analysis.
         }
     }
 
-    public Task<T?> AnalyzeForPosition(Request request) {
-        throw new NotImplementedException();
+    public async Task<T?> AnalyzeDetailed(Request request, CancellationToken cancellationToken = default) {
+        if (request.Resume is null || request.Resume.Length == 0) return null;
+        PdfAnalysis analysis = await AnalyzeTextFromPdf(request.Resume);
+        
+        string structuredPrompt = $@"
+Analyze the resume and return ONLY valid JSON.
+DO NOT include markdown.
+DO NOT include explanations.
+DO NOT include code fences.
+DO NOT include text outside JSON.
+
+{request.PositionDescription}
+
+RESUME ANALYSIS REPORT
+=====================
+
+1. CONTENT ANALYSIS:
+-------------------
+{analysis.Content}
+
+2. FONT AND FORMATTING ANALYSIS:
+------------------------------
+{analysis.FontsAnalysis()}
+
+Considering this report for your analysis.
+";
+
+        try
+        {
+            var httpClient = _httpClientFactory.CreateClient("Ollama");
+
+            var chatClient = new OllamaApiClient(
+                client: httpClient,
+                defaultModel:"llama3.1:latest"
+            );
+            
+            ChatMessage prompt = new ChatMessage(ChatRole.User, new List<AIContent>
+            {
+                new TextContent($"PDF Content:\n{structuredPrompt}\n\nInstructions:\n{Prompt.Value}")
+            });
+
+            var response = await chatClient.GetResponseAsync<Response>(new[] { prompt },
+                new ChatOptions
+                {
+                    Temperature = 0.2f,
+                    MaxOutputTokens = 1500,
+                    ResponseFormat = ChatResponseFormat.Json
+                }, cancellationToken: cancellationToken);
+            
+            var jsonString = ExtractJsonObject(response.Text);
+            var result = Deserialize(jsonString);
+            
+            return result;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError($"An error occured when the sending the prompt to ollama; {e.Message}");
+            throw;
+        }
     }
 
     private async Task<PdfAnalysis> AnalyzeTextFromPdf(IFormFile pdf)
