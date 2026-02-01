@@ -8,7 +8,7 @@ const DetailedCheck = () => {
     return (
         <div className="App-wrapper ">
             <Header/>
-            <div className="App h-[95vh]">
+            <div className="App flex-col xl:flex-row 2xl:h-[95vh]">
                 <ResumeContainer analyzer_type={AnalyzerType.Detailed}/>
                 <AnalyzerResults />
             </div>

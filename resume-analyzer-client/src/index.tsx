@@ -6,7 +6,7 @@ import DetailedCheck from "./Pages/DetailedCheck";
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter as Router, Routes, Route } from "react-router";
 import axios from "axios";
-import ResumeExample from "./Pages/ResumeExample";
+import ResumeExamples from "./Pages/ResumeExamples";
 import AnalyzerContextProvider from "./Components/AnalyzerContextProvider";
 
 const root = ReactDOM.createRoot(
@@ -25,7 +25,7 @@ root.render(
       <Routes>
           <Route path="/" element={<AnalyzerContextProvider><App /></AnalyzerContextProvider>} />
           <Route path="/position-check" element={<AnalyzerContextProvider><DetailedCheck /></AnalyzerContextProvider>} />
-          <Route path={"/resume-example"} element={<ResumeExample/>}></Route>
+          <Route path={"/resume-example"} element={<ResumeExamples/>}></Route>
       </Routes>
   </Router>
 );

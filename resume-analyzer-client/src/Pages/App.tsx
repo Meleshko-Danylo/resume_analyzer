@@ -9,7 +9,7 @@ function App() {
     return (
         <div className="App-wrapper">
             <Header/>
-            <div className="App h-[90vh]">
+            <div className="App flex-col xl:flex-row xl:h-[90vh]">
                 <ResumeContainer analyzer_type={AnalyzerType.Standard}/>
                 <AnalyzerResults />
             </div>

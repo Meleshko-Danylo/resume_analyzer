@@ -38,11 +38,20 @@ const AnalyzerResults = () => {
         else return `${pad(days)}:${pad(hr)}:${pad(mins)}:${pad(sec)}`;
     }
     
+    const getColorForCircle = () => {
+        if(timer >= 120) return "bg-orange-400"
+        else if (timer >= 180) return "bg-red-400"
+        else return "bg-green-400"
+    }
+    
     if(loading){
         return (
             <div className="analyzer-results-container flex flex-col p-6">
-                <div className="flex-3 pt-1 pr-4 flex justify-end">
-                    <p className="text-[1.2rem] text-[#dbd8e3] opacity-50">{formatTime(timer)}</p>
+                <div className="pt-1 pr-4 flex justify-end">
+                    <p className="text-[1.2rem] text-[#dbd8e3] opacity-50 flex items-center gap-2">
+                        {formatTime(timer)}
+                        <div className={`w-[10px] h-[10px] rounded-full ${getColorForCircle()}`}></div>
+                    </p>
                 </div>
                 <div className="flex-1 flex items-center justify-center"><img src="/SpinnerSVG.svg" alt="loading" /></div>
             </div>
@@ -52,15 +61,15 @@ const AnalyzerResults = () => {
     if(!analysisResults){
         return (
             <div className="analyzer-results-container flex flex-col items-center justify-center p-6 text-[#dbd8e3] opacity-50">
-                <p className="text-xl">Upload a resume to see the analysis</p>
+                <p className="text-xl text-center md:text-[22px] lg:text-[26px] xl:text-[22px]">Upload a resume to see the analysis</p>
             </div>
         );
     }
     
     return (
         <div className="analyzer-results-container p-6 text-[#dbd8e3]">
-            <div className="flex items-center justify-between mb-8 bg-[#352f44] p-6 rounded-2xl shadow-lg border border-[#5c5470]">
-                <div>
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8 bg-[#352f44] p-6 rounded-2xl shadow-lg border border-[#5c5470]">
+                <div className="text-center sm:text-left">
                     <h2 className="text-2xl font-bold mb-2">Analysis Results</h2>
                     <p className="text-sm opacity-80">Based on your resume evaluation</p>
                 </div>

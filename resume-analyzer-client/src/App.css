@@ -13,9 +13,9 @@
 .App{
     display: flex;
     align-items: center;
-    gap: 2rem;
+    gap: 1.5rem;
     width: 90vw;
-    padding: 0.75rem;
+    padding: 1rem;
     background-color: #2a2438;
     border-radius: 1rem;
     border: 1px solid #5c5470;
@@ -23,15 +23,16 @@
 }
 
 .header-container{
-    height: 9vh;
+    min-height: 9vh;
     width: 100%;
     background-color: transparent;
     display: flex;
-    justify-content: start;
+    justify-content: center;
     align-items: center;
-    padding-left: 5vw;
+    padding: 1rem;
     gap: 1rem;
     box-sizing: border-box;
+    flex-wrap: wrap;
 }
 
 a{
@@ -39,8 +40,20 @@ a{
     color: #dbd8e3;
     background-color: #2a2438;
     border-radius: 10px;
-    padding:  1vh 2vh;
+    padding:  2vw 3vw;
     box-shadow: 0px 14px 28px 1px rgba(0,0,0,0.79);
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    .header-container {
+        justify-content: start;
+        padding-left: 5vw;
+    }
+    a{
+        padding:  1vh 2vh;
+        font-size: 16px;
+    }
 }
 
 a:hover{
@@ -56,11 +69,23 @@ a:hover{
     border: none;
     cursor: pointer;
     color: #dbd8e3;
-    padding: 18vh 15vh;
+    padding: 9vh 9vh;
     background-color: #352f44;
     align-self: center;
     font-size:  1.8rem;
     box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
+}
+
+@media (min-width: 768px) {
+    .resume-file-btn {
+        padding: 15vh 15vh;
+    }
+}
+
+@media (min-width: 1280px) {
+    .resume-file-btn {
+        padding: 18vh 18vh;
+    }
 }
 
 .resume-file-btn:hover{
@@ -69,23 +94,56 @@ a:hover{
 }
 
 .resume-container{
-    flex: 3;
+    flex: 1;
+    width: 100%;
     background-color: #2a2438;
-    border-right: solid 1px white;
-    border-radius:  1rem 0 0 1rem;
+    border-bottom: solid 1px #5c5470;
+    border-radius: 1rem 1rem 0 0;
     display: flex;
     flex-direction: column;
-    padding: 1.8rem 1.5rem;
+    padding: 1.5rem;
+    box-sizing: border-box;
+}
+
+@media (min-width: 1280px) {
+    .resume-container {
+        flex: 3;
+        border-bottom: none;
+        border-right: solid 1px #5c5470;
+        border-radius: 1rem 0 0 1rem;
+        height: 100%;
+    }
 }
 
 .analyzer-results-container{
-    flex: 2;
-    height: 100%;
+    flex: 1;
+    width: 100%;
+    min-height: 300px;
     overflow-y: auto;
     scrollbar-width: auto;
     scrollbar-color: #2a2438 transparent;
     background-color: #2a2438;
-    border-radius:  0 1rem 1rem 0;
+    border-radius: 0 0 1rem 1rem;
+    padding: 1rem;
+    box-sizing: border-box;
+}
+
+@media (min-width: 768px) {
+    .analyzer-results-container {
+        flex: 2;
+        min-height: 420px;
+        border-radius: 0 1rem 1rem 0;
+        padding: 0;
+    }
+}
+
+@media (min-width: 1024px) {
+    .analyzer-results-container {
+        flex: 2;
+        height: 100%;
+        border-radius: 0 1rem 1rem 0;
+        padding: 0;
+    }
 }
 
 .input{
