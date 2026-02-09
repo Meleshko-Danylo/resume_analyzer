@@ -22,11 +22,13 @@ export const axiosInstance = axios.create({
 
 root.render(
   <Router>
-      <Routes>
-          <Route path="/" element={<AnalyzerContextProvider><App /></AnalyzerContextProvider>} />
-          <Route path="/position-check" element={<AnalyzerContextProvider><DetailedCheck /></AnalyzerContextProvider>} />
-          <Route path={"/resume-example"} element={<ResumeExamples/>}></Route>
-      </Routes>
+      <AnalyzerContextProvider>
+          <Routes>
+              <Route path="/" element={<App />} />
+              <Route path="/position-check" element={<DetailedCheck />} />
+              <Route path={"/resume-example"} element={<ResumeExamples />}></Route>
+          </Routes>
+      </AnalyzerContextProvider>
   </Router>
 );
 

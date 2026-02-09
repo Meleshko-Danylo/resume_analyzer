@@ -1,3 +1,5 @@
+using Google.GenAI;
+using Google.GenAI.Types;
 using Microsoft.AspNetCore.Mvc;
 using OllamaSharp;
 using resume_analyzer_api.AI_Resume_Analyzing_Service;
@@ -13,14 +15,18 @@ builder.Services.AddHttpClient("Ollama", client =>
     client.DefaultRequestHeaders.Add("Accept", "application/json");
     client.Timeout = TimeSpan.FromMinutes(5);
 });
-builder.Services.AddChatClient(new OllamaApiClient(new Uri("http://localhost:11434/"), "llama3.1:latest"));
+// builder.Services.AddChatClient(new OllamaApiClient(new Uri("http://localhost:11434/"), "llama3.1:latest"));
+builder.Services.AddSingleton(new Client(apiKey:builder.Configuration["GOOGLE_API_KEY"], httpOptions: new HttpOptions
+{
+    Timeout = 5 * 60 * 1000
+}));
 builder.Services.AddProblemDetails(opt => opt.CustomizeProblemDetails = context =>
 {
     context.ProblemDetails.Title = "Resume Analyzer API";
     context.ProblemDetails.Instance = $"{context.HttpContext.Request.Method} {context.HttpContext.Request.Path}";
     context.ProblemDetails.Extensions.TryAdd("requestId", context.HttpContext.TraceIdentifier);
 });
-builder.Services.AddScoped<IResumeAnalyzer<Response>, ResumeAnalyzerOllama<Response>>();
+builder.Services.AddScoped<IResumeAnalyzer<Response>, ResumeAnalyzerGemini<Response>>();
 
 var app = builder.Build();
 

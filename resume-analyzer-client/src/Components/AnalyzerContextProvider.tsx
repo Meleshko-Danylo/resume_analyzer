@@ -1,5 +1,6 @@
-﻿import React, {createContext, useContext, useState} from 'react';
+﻿import React, {createContext, useCallback, useContext, useState} from 'react';
 import {Response} from "../Core/Response";
+import {CancelTokenSource} from "axios";
 
 const AnalyzerContext = createContext<AnalyzerContextProps|undefined>(undefined);
 
@@ -12,6 +13,9 @@ type AnalyzerContextProps = {
     setLoading: React.Dispatch<React.SetStateAction<boolean>>;
     lastStartedAt: number;
     setLastStartedAt: React.Dispatch<React.SetStateAction<number>>;
+    cancelTokenSource: CancelTokenSource | null;
+    setCancelTokenSource: React.Dispatch<React.SetStateAction<CancelTokenSource | null>>;
+    cancelRequest: () => void;
 }
 
 export const useAnalyzerContext = () => {
@@ -26,9 +30,30 @@ const AnalyzerContextProvider = ({children}: {children: React.ReactNode}) => {
     const [loading, setLoading] = useState(false);
     const [timer, setTimer] = useState(0);
     const [lastStartedAt, setLastStartedAt] = useState(0);
+    const [cancelTokenSource, setCancelTokenSource] = useState<CancelTokenSource | null>(null);
+
+    const cancelRequest = useCallback(() => {
+        if (cancelTokenSource) {
+            cancelTokenSource.cancel();
+            setCancelTokenSource(null);
+            setLoading(false);
+        }
+    }, [cancelTokenSource]);
     
     return (
-        <AnalyzerContext.Provider value={{analysisResults, setAnalysisResults, loading, setLoading, timer, setTimer, lastStartedAt, setLastStartedAt}}>
+        <AnalyzerContext.Provider value={{
+            analysisResults, 
+            setAnalysisResults, 
+            loading, 
+            setLoading, 
+            timer, 
+            setTimer, 
+            lastStartedAt, 
+            setLastStartedAt,
+            cancelTokenSource,
+            setCancelTokenSource,
+            cancelRequest
+        }}>
             {children}
         </AnalyzerContext.Provider>
     );

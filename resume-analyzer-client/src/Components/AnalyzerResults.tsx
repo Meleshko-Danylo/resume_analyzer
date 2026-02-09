@@ -47,11 +47,11 @@ const AnalyzerResults = () => {
     if(loading){
         return (
             <div className="analyzer-results-container flex flex-col p-6">
-                <div className="pt-1 pr-4 flex justify-end">
-                    <p className="text-[1.2rem] text-[#dbd8e3] opacity-50 flex items-center gap-2">
+                <div className="pt-1 pr-4 flex justify-end items-center gap-2">
+                    <p className="text-[1.2rem] text-[#dbd8e3] opacity-50">
                         {formatTime(timer)}
-                        <div className={`w-[10px] h-[10px] rounded-full ${getColorForCircle()}`}></div>
                     </p>
+                    <div className={`w-[10px] h-[10px] rounded-full ${getColorForCircle()}`}></div>
                 </div>
                 <div className="flex-1 flex items-center justify-center"><img src="/SpinnerSVG.svg" alt="loading" /></div>
             </div>

@@ -1,4 +1,4 @@
-﻿import React, {useRef, useState} from 'react';
+﻿import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {analyze_resume} from "../api/analyze_resume";
 import {Request} from "../Core/Request";
 import {useAnalyzerContext} from "./AnalyzerContextProvider";
@@ -21,10 +21,14 @@ const ResumeContainer = ({analyzer_type}:{analyzer_type: AnalyzerType}) => {
     const resumeFileInputRef = useRef<HTMLInputElement>(null);
     const positionRef = useRef<HTMLInputElement>(null);
     const requirementsRef = useRef<HTMLDivElement>(null);
-    const {setLoading, loading, setAnalysisResults, setLastStartedAt} = useAnalyzerContext();
+    const {setLoading, loading, setAnalysisResults, setLastStartedAt, setCancelTokenSource, cancelRequest} = useAnalyzerContext();
     const [inputKey, setInputKey] = useState(0);
     
-    const cancelTokenRef = useRef<CancelTokenSource>(null);
+    useEffect(() => {
+        return () => {
+            cancelRequest();
+        }
+    }, [cancelRequest]);
     
     const handleClick = ():void => {
         if(resumeFileInputRef.current) {
@@ -33,7 +37,7 @@ const ResumeContainer = ({analyzer_type}:{analyzer_type: AnalyzerType}) => {
     }
     
     const CancelRequest = () => {
-        cancelTokenRef.current?.cancel();
+        cancelRequest();
     }
     
     const getRequirements = () => {
@@ -70,6 +74,7 @@ const ResumeContainer = ({analyzer_type}:{analyzer_type: AnalyzerType}) => {
     
     const handleSubmit = async () => {
         const startTime = Date.now();
+        const ctSource = axios.CancelToken.source();
         try {
             if(!positionRef.current || !requirementsRef.current || !resumeFileInputRef.current) return;
             
@@ -80,7 +85,7 @@ const ResumeContainer = ({analyzer_type}:{analyzer_type: AnalyzerType}) => {
             const resume = getResume();
             if(!resume) {toast.warn("Upload your resume"); return;}
             
-            cancelTokenRef.current = axios.CancelToken.source();
+            setCancelTokenSource(ctSource);
             setLastStartedAt(startTime);
             setLoading(true);
             
@@ -90,23 +95,28 @@ const ResumeContainer = ({analyzer_type}:{analyzer_type: AnalyzerType}) => {
             };
             setInputKey(prevState => prevState + 1);
             
-            const response = await analyze_resume_for_position(request, cancelTokenRef.current.token);
-            setAnalysisResults(response);
+            const response = await analyze_resume_for_position(request, ctSource.token);
+            if (response) {
+                setAnalysisResults(response);
+            }
         }
         catch (e) {
             console.error(e);
-            setLoading(false);
         }
         finally {
             setLoading(false);
+            setCancelTokenSource(prev => prev === ctSource ? null : prev);
         }
     }
     
     const handleChange = async (event:React.ChangeEvent<HTMLInputElement>):Promise<void> => {
         const startTime = Date.now();
+        const ctSource = axios.CancelToken.source()
         try {
             if(!event.target.files || event.target.files.length <= 0) return;
-            cancelTokenRef.current = axios.CancelToken.source();
+            
+            setCancelTokenSource(ctSource);
+            
             setLastStartedAt(startTime);
             setLoading(true);
             
@@ -117,15 +127,17 @@ const ResumeContainer = ({analyzer_type}:{analyzer_type: AnalyzerType}) => {
 
             setInputKey(prevState => prevState + 1);
 
-            const response = await analyze_resume(request, cancelTokenRef.current.token);
-            setAnalysisResults(response);
+            const response = await analyze_resume(request, ctSource.token);
+            if (response) {
+                setAnalysisResults(response);
+            }
         }
         catch (e) {
             console.error(e);
-            setLoading(false);
         }
         finally {
             setLoading(false);
+            setCancelTokenSource(prev => prev === ctSource ? null : prev);
         }
     }
     
