@@ -24,7 +24,7 @@ public class ResumeAnalyzerOllama<T>:IResumeAnalyzer<T> where T: class
 
     public async Task<T?> Analyze(Request request, CancellationToken cancellationToken = default) {
         if (request.Resume is null || request.Resume.Length == 0) return null;
-        PdfAnalysis analysis = await AnalyzeTextFromPdf(request.Resume);
+        PdfAnalysis analysis = await AnalyzeTextFromPdf(request.Resume, cancellationToken);
         
         string structuredPrompt = $@"
 Analyze the resume and return ONLY valid JSON.
@@ -83,7 +83,7 @@ Considering this report for your analysis.
 
     public async Task<T?> AnalyzeDetailed(Request request, CancellationToken cancellationToken = default) {
         if (request.Resume is null || request.Resume.Length == 0) return null;
-        PdfAnalysis analysis = await AnalyzeTextFromPdf(request.Resume);
+        PdfAnalysis analysis = await AnalyzeTextFromPdf(request.Resume, cancellationToken);
         
         string structuredPrompt = $@"
 Analyze the resume and return ONLY valid JSON.
@@ -142,7 +142,7 @@ Considering this report for your analysis.
         }
     }
 
-    private async Task<PdfAnalysis> AnalyzeTextFromPdf(IFormFile pdf)
+    private async Task<PdfAnalysis> AnalyzeTextFromPdf(IFormFile pdf, CancellationToken cancellationToken)
     {
         var content = new StringBuilder();
         var pdfAnalysis = new PdfAnalysis();
@@ -150,12 +150,13 @@ Considering this report for your analysis.
 
         using (var memory = new MemoryStream())
         {
-            await pdf.CopyToAsync(memory);
+            await pdf.CopyToAsync(memory, cancellationToken);
             memory.Position = 0;
 
             using (var pdfDoc = PdfDocument.Open(memory))
             {
                 foreach (var page in pdfDoc.GetPages()) {
+                    cancellationToken.ThrowIfCancellationRequested();
                     content.AppendLine(page.Text);
                     var pageInfo = new PageInfo()
                     {

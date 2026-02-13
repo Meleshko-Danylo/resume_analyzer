@@ -8,7 +8,16 @@ using resume_analyzer_api.Core;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
-builder.Services.AddCors();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("DefaultPolicy", policyBuilder =>
+    {
+        policyBuilder.WithOrigins("http://localhost:3000", "https://localhost:3000", "https://zealous-desert-0aa692a03.6.azurestaticapps.net");
+        policyBuilder.AllowAnyHeader();
+        policyBuilder.AllowAnyMethod();
+        policyBuilder.AllowCredentials();
+    });
+});
 builder.Services.AddHttpClient("Ollama", client =>
 {
     client.BaseAddress = new Uri("http://localhost:11434/");
@@ -48,7 +57,7 @@ app.MapPost("/resume-analyzer-api/analyze-resume", async ([FromForm] Request bod
     catch (Exception e)
     {
         logger.LogError(e, "An error occured in resume analyzer Analyze method");
-        throw;
+        return Results.StatusCode(StatusCodes.Status503ServiceUnavailable);
     }
 }).DisableAntiforgery();
 
@@ -63,15 +72,10 @@ app.MapPost("/resume-analyzer-api/analyze-resume-for-position", async ([FromForm
     catch (Exception e)
     {
         logger.LogError(e, "An error occured in resume analyzer Analyze method");
-        throw;
+        return Results.StatusCode(StatusCodes.Status503ServiceUnavailable);
     }
 }).DisableAntiforgery();
 
-app.UseCors(policyBuilder =>
-    policyBuilder
-        .AllowAnyHeader()
-        .AllowAnyMethod()
-        .AllowAnyOrigin());
-    // .WithOrigins("localhost:3000"));
+app.UseCors("DefaultPolicy");
 
 app.Run();

@@ -7,3 +7,4 @@ appsettings.json
 
 resume-analyzer-client/package-lock.json
 resume-analyzer-client/node_modules/
+resume-analyzer-client/build/
